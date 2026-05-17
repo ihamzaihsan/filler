@@ -34,6 +34,28 @@ impl Player {
             None
         }
     }
+
+    fn own_cells(self) -> [char; 2] {
+        match self {
+            Self::One => ['a', '@'],
+            Self::Two => ['s', '$'],
+        }
+    }
+
+    fn opponent_cells(self) -> [char; 2] {
+        match self {
+            Self::One => ['s', '$'],
+            Self::Two => ['a', '@'],
+        }
+    }
+
+    fn is_own(self, value: char) -> bool {
+        self.own_cells().contains(&value)
+    }
+
+    fn is_opponent(self, value: char) -> bool {
+        self.opponent_cells().contains(&value)
+    }
 }
 
 impl Piece {
@@ -127,6 +149,36 @@ pub fn parse_turn(input: &str) -> Option<(Board, Piece)> {
         parse_board(board_header, &board_lines)?,
         parse_piece(piece_header, &piece_lines)?,
     ))
+}
+
+pub fn is_valid_placement(board: &Board, piece: &Piece, player: Player, coord: Coord) -> bool {
+    let mut own_overlaps = 0;
+
+    for (piece_x, piece_y) in piece.filled_offsets() {
+        let board_x = coord.x + piece_x;
+        let board_y = coord.y + piece_y;
+
+        if board_x < 0
+            || board_y < 0
+            || board_x >= board.width as i32
+            || board_y >= board.height as i32
+        {
+            return false;
+        }
+
+        let board_cell = board.cells[board_y as usize][board_x as usize];
+        if player.is_opponent(board_cell) {
+            return false;
+        }
+        if player.is_own(board_cell) {
+            own_overlaps += 1;
+            if own_overlaps > 1 {
+                return false;
+            }
+        }
+    }
+
+    own_overlaps == 1
 }
 
 pub fn format_coord(coord: Coord) -> String {
