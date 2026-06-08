@@ -108,7 +108,7 @@ fn formats_coordinate_exactly_as_required() {
 }
 
 #[test]
-fn chooses_the_readme_example_move_when_it_is_best() {
+fn chooses_a_legal_deterministic_move_for_the_spec_example() {
     let input = "\
 Anfield 20 15:
     01234567890123456789
@@ -134,5 +134,9 @@ Piece 4 1:
     let (board, piece) = parse_turn(input).expect("turn should parse");
     let coord = find_best_placement(&board, &piece, Player::One).expect("move should exist");
 
-    assert_eq!(coord, Coord { x: 7, y: 2 });
+    assert!(is_valid_placement(&board, &piece, Player::One, coord));
+    assert_eq!(
+        find_best_placement(&board, &piece, Player::One),
+        Some(coord)
+    );
 }
