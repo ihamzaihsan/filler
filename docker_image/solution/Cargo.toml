@@ -2,5 +2,7 @@
 name = "filler"
 version = "0.1.0"
 edition = "2021"
+description = "Filler: Rust Territory Strategy Bot - a deterministic territory-control robot"
+default-run = "filler"
 
 [dependencies]
