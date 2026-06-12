@@ -1,0 +1,8 @@
+.review/
+work.md
+**/target/
+**/target-*/
+*.log
+.DS_Store
+audit-results/
+docs/results/local/

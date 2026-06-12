@@ -1,0 +1,12 @@
+* text=auto
+*.rs text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+*.yml text eol=lf
+*.html text eol=lf
+.gitignore text eol=lf
+.dockerignore text eol=lf
+Dockerfile text eol=lf
+docker_image/maps/* text eol=lf
+docker_image/*game_engine -text
+docker_image/*robots/* -text

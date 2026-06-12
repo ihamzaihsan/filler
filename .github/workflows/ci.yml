@@ -1,0 +1,24 @@
+name: Rust and engine audit
+on: [push, pull_request]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the Docker game environment
+        run: docker build --platform linux/amd64 -t filler docker_image
+      - name: Formatting, lint, and tests
+        run: >-
+          docker run --rm filler -c
+          'cd solution && cargo fmt --check && cargo clippy --locked --offline --all-targets -- -D warnings && cargo test --locked --offline'
+      - name: All maps and opponents including bonuses
+        run: |
+          mkdir -p audit-results
+          docker run --rm --mount "type=bind,source=$PWD/audit-results,target=/results" filler -c 'solution/target/release/audit --full --games 5 --both-roles --output /results'
+      - name: Save match evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: filler-audit-results
+          path: audit-results/

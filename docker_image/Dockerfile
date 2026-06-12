@@ -1,13 +1,16 @@
-FROM rust:1.63-buster
+FROM rust:1.99.0-bookworm
 
-ENV PATH="/usr/local/cargo/bin:${PATH}"
+WORKDIR /filler
+COPY maps/ maps/
+COPY linux_robots/ linux_robots/
+COPY linux_game_engine ./linux_game_engine
+COPY solution/ solution/
 
-COPY ./maps			        /filler/maps
-COPY ./linux_robots		    /filler/linux_robots
-COPY ./m1_robots		    /filler/m1_robots
-COPY ./linux_game_engine	/filler/linux_game_engine
-COPY ./m1_game_engine	    /filler/m1_game_engine
+RUN rustup component add rustfmt clippy \
+    && chmod +x linux_game_engine linux_robots/* \
+    && ln -s linux_game_engine game_engine \
+    && ln -s linux_robots robots \
+    && sed -i 's/\r$//' maps/* \
+    && cargo build --release --locked --offline --manifest-path solution/Cargo.toml
 
-WORKDIR /filler/
-
-ENTRYPOINT /bin/bash
+ENTRYPOINT ["bash"]
