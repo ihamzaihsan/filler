@@ -4,6 +4,8 @@ A territory strategy project built in Rust. Two bots compete to occupy a shared 
 
 I built the Rust bot, an offline graphical replay viewer, and a command-line match runner. The game engine, maps and reference opponents are supplied exercise assets.
 
+**Live Demo:** [View the application](https://filler-replay.vercel.app)
+
 ![Filler replay viewer](docs/demo.png)
 
 ## How to play
